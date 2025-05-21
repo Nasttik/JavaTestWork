@@ -19,7 +19,6 @@ public class logReader {
         if (!Files.isDirectory(dir)) {
             throw new IOException("Путь не является директорией: " + dirPath);
         }
-
         // Получение .log файлов
         return Files.list(dir)
                 .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".log"))
