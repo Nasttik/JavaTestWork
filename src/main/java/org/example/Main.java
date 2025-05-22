@@ -1,33 +1,51 @@
 package org.example;
-import java.io.File;          // Для работы с файлами (класс File)
-import java.io.IOException;   // Для обработки исключений ввода/вывода
-import java.nio.file.Files;   // Утилиты для работы с файлами (NIO)
-import java.nio.file.Path;    // Интерфейс для представления путей
-import java.nio.file.Paths;   // для создания Path объектов
-import java.util.List;        // Интерфейс списка
-import java.util.stream.Collectors; // Для работы со Stream API
 
-import static readLogDirectory.logReader.readLogDirectory;
+import logParsers.logParser;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class Main {
     public static void main(String[] args) {
         try {
-            // Указываю путь к директории с логами
             String logDirPath = "./logs";
-
-            // Получаю список .log файлов
             List<File> logFiles = readLogDirectory(logDirPath);
 
-            // Вывожу информацию о файлах
             System.out.println("Найдено файлов: " + logFiles.size());
+
             for (File file : logFiles) {
-                System.out.println("Имя файла: " + file.getName());
-                System.out.println("Путь: " + file.getAbsolutePath());
+                System.out.println("\nОбработка файла: " + file.getName());
+
+                List<logParser.LogEntry> entries = logParser.parseLogFile(file.getAbsolutePath());
+                for (logParser.LogEntry entry : entries) {
+                    System.out.println(entry);
+                }
             }
 
         } catch (IOException e) {
-            // Обработка возможных ошибок
             System.err.println("Ошибка: " + e.getMessage());
         }
+            }
+
+    public static List<File> readLogDirectory(String dirPath) throws IOException {
+        Path dir = Paths.get(dirPath);
+
+        if (!Files.exists(dir)) {
+            throw new IOException("Директория не существует: " + dirPath);
+        }
+        if (!Files.isDirectory(dir)) {
+            throw new IOException("Указанный путь не является директорией: " + dirPath);
+        }
+
+
+        return Files.list(dir)
+                .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".log"))
+                .map(Path::toFile)
+                .collect(Collectors.toList());
     }
 }
