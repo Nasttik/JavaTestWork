@@ -23,7 +23,7 @@ public class logParser {
             this.amount = amount;
             this.recipient = recipient;
         }
-
+        //переодпределение метода класса
         @Override
         public String toString() {
             return String.format("[%s] %s %s %s%s",
