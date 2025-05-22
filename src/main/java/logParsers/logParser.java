@@ -52,7 +52,7 @@ public class logParser {
 
     private static LogEntry parseLine(String line) {
         try {
-            // Упрощенный парсинг без регулярных выражений
+            // парсинг
             int firstBracket = line.indexOf('[');
             int lastBracket = line.indexOf(']');
 
