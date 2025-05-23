@@ -11,7 +11,6 @@ public class logReader {
 
     public static List<File> readLogDirectory(String dirPath) throws IOException {
         Path dir = Paths.get(dirPath);
-
         // Проверка директории
         if (!Files.exists(dir)) {
             throw new IOException("Директория не существует: " + dirPath);
